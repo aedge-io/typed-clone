@@ -239,6 +239,7 @@ export type InherentlyCloned<T> = T extends Cloneable<infer C> ? C : never;
 export function isInherentlyCloneable<T extends object>(
   value: T,
 ): value is T & Cloneable {
+  //deno-lint-ignore no-explicit-any
   return typeof (value as any)[Clone] === "function";
 }
 
@@ -326,6 +327,7 @@ type StructuredCloneableBuiltin =
 
 type NotCloneable =
   | symbol
+  //deno-lint-ignore ban-types
   | Function
   | WeakMap<WeakKey, unknown>
   | WeakSet<WeakKey>
