@@ -740,6 +740,7 @@ Deno.test("typed-clone::clone", async (t) => {
       assertNotStrictEquals(cloned, original);
       assertNotEquals(cloned, original);
       assertEquals(cloned.a, original.a);
+      //deno-lint-ignore no-explicit-any
       assertFalse((cloned as any)[tag]);
     },
   );
@@ -1117,9 +1118,11 @@ Deno.test("typed-clone::clone", async (t) => {
       const cloned = clone(nested, { depth: 3 });
 
       assertNotStrictEquals(cloned, nested);
+      //deno-lint-ignore no-explicit-any
       assertNotStrictEquals((cloned as any)[0][0], (nested as any)[0][0]);
 
       /* at this depth it is ref'd */
+      //deno-lint-ignore no-explicit-any
       assertStrictEquals((cloned as any)[0][0][0], (nested as any)[0][0][0]);
       assertEquals(cloned, nested);
     },
@@ -1135,7 +1138,9 @@ Deno.test("typed-clone::clone", async (t) => {
 
       const cloned = clone(nested, { depth: 999 });
 
+      //deno-lint-ignore no-explicit-any
       let currentOriginal: any = nested;
+      //deno-lint-ignore no-explicit-any
       let currentClone: any = cloned;
       for (let i = 0; i < 500; i++) {
         assertNotStrictEquals(currentClone, currentOriginal);
@@ -1220,7 +1225,7 @@ Deno.test("typed-clone::clone", async (t) => {
 
       class Point { // implements Cloneable<Point>
         constructor(private x: number, private y: number) {}
-        [Clone](opts?: CloneOptions) {
+        [Clone](_opts?: CloneOptions) {
           return new Point(this.x, this.y);
         }
       }
