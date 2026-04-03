@@ -1,7 +1,7 @@
 {
   "name": "@aedge-io/typed-clone",
   "description": "Type-safe, performant and extensible clone implementation",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "license": "MIT",
   "exports": "./lib/clone.ts",
   "exclude": ["cov/", "npm/"],
