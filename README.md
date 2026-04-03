@@ -19,6 +19,7 @@ This library was initially developed to provide a type-safe alternative to the n
 ### Use Cases
 
 This library particularly shines when referential transparency and infallibility are desired, or when dealing with heterogeneous and complex data that usually requires hand-rolled copy/clone implementations. `typed-clone` offers a good baseline implementation in those cases.
+
 The custom clone protocol also allows for a seamless interaction of standard data types with your custom types or domain model.
 
 ---

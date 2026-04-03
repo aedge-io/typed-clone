@@ -6,7 +6,7 @@ The goal was to clearly communicate which types cannot be meaningfully cloned wi
 
 ## Ref and Unref
 
-The cornerstone of the type-safety story is `Ref<T>`, a compile-time marker (zero runtime cost) indicating a value was **not** cloned. `ref()` and `unref()` are identity functions which used for type casts. They are the inverse to each other.
+The cornerstone of the type-safety story is `Ref<T>`, a compile-time marker (zero runtime cost) indicating a value was **not** cloned. `ref()` and `unref()` are identity functions used for type casts. They are the inverse to each other.
 
 ```typescript
 import { clone, unref } from "@aedge-io/typed-clone";
