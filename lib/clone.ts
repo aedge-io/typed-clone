@@ -52,11 +52,11 @@ export interface CloneOptions extends StructuredSerializeOptions {
  * High level flow:
  *  1. Primitives / null / undefined  — returned by value.
  *  2. Functions / symbols            — returned by reference (Ref)
- *  7. Plain records                  — property-by-property
  *  3. `Cloneable` (has `[Clone]`)    — delegates to the protocol
+ *  4. Plain records                  — property-by-property
  *  5. Containers (Array, Map, Set)   — element-by-element
- *  4. Errors                         — returned by reference (Ref)
- *  6. Custom classes with methods    — returned by reference (Ref)
+ *  6. Errors                         — returned by reference (Ref)
+ *  7. Custom classes with methods    — returned by reference (Ref)
  *  8. Builtins & data classes        — `structuredClone`
  */
 export function clone<T>(
