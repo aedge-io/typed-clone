@@ -1,0 +1,57 @@
+{
+  "name": "@aedge-io/typed-clone",
+  "description": "Type-safe, performant and extensible clone implementation",
+  "version": "0.0.0",
+  "license": "MIT",
+  "exports": "./lib/clone.ts",
+  "exclude": ["cov/", "npm/"],
+  "publish": {
+    "include": ["LICENSE.md", "README.md", "lib/**/*.ts"],
+    "exclude": [
+      "bench/",
+      "cov/",
+      "docs/",
+      "examples/",
+      "npm/",
+      "scripts/",
+      "lib/**/*_test.ts"
+    ]
+  },
+  "tasks": {
+    "bench:mem": "deno run --v8-flags=--expose-gc --allow-read bench/clone_memory.ts",
+    "build:npm": "./scripts/build_npm.ts",
+    "build:cov": "deno coverage --lcov --output=./cov.lcov ./cov/",
+    "bump": "./scripts/bump_version.ts",
+    "check:ci": "deno check --doc",
+    "hooks:install": "./scripts/install_hooks.ts",
+    "test:docs": "deno test --parallel --doc ./docs",
+    "test:ci": "deno test --parallel --fail-fast --coverage=./cov",
+    "release": "./scripts/release.ts"
+  },
+  "fmt": {
+    "proseWrap": "preserve",
+    "operatorPosition": "nextLine"
+  },
+  "imports": {
+    "@david/dax": "jsr:@david/dax@0.45.0", //dev
+    "@david/jsonc-morph": "jsr:@david/jsonc-morph@0.3.1", //dev
+    "@deno/dnt": "jsr:@deno/dnt@0.42.3", //dev
+    "@std/assert": "jsr:@std/assert@1.0.18", //dev
+    "@std/cli": "jsr:@std/cli@1.0.28", //dev
+    "@std/semver": "jsr:@std/semver@1.0.8", //dev
+    "@std/testing": "jsr:@std/testing@1.0.17", //dev
+    "@aedge-io/typed-clone": "./lib/clone.ts", //dev
+    "@aedge-io/grugway": "jsr:@aedge-io/grugway@0.2.1", //dev
+    "project/integrity": "./scripts/helpers/integrity.ts", //dev
+    "project/metadata": "./scripts/metadata.ts", //dev
+    "project/examples": "./examples/doc_helpers.ts", //dev
+    "project/pipeline": "./scripts/helpers/pipeline.ts", //dev
+    "project/manifest": "./scripts/helpers/manifest.ts", //dev
+    "project/changes": "./scripts/helpers/changes.ts", //dev
+    "project/version": "./scripts/helpers/version.ts", //dev
+    "project/shell": "./scripts/helpers/shell.ts", //dev
+    "project/git": "./scripts/helpers/git.ts", //dev
+    "project/fs": "./scripts/helpers/fs.ts", //dev
+    "rfdc": "npm:rfdc@1.4.1" //dev -> benchmarks
+  }
+}

@@ -1,0 +1,5 @@
+.release/
+npm/
+cov/
+**.lock
+**.lcov
