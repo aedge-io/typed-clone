@@ -1,6 +1,6 @@
 # typed-clone
 
-[![codecov](https://codecov.io/github/aedge-io/typed-clone/graph/badge.svg?token=9WTDQ8WOKW)](https://codecov.io/github/aedge-io/typed-clone)
+[![codecov](https://codecov.io/github/aedge-io/typed-clone/graph/badge.svg?token=S4AQB5UAJO)](https://codecov.io/github/aedge-io/typed-clone)
 ![NPM Version](https://img.shields.io/npm/v/%40aedge-io%2Ftyped-clone)
 ![JSR Version](https://img.shields.io/jsr/v/%40aedge-io/typed-clone)
 
