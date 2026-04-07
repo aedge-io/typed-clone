@@ -64,7 +64,8 @@ export function clone<T>(
   opts?: CloneOptions,
 ): Cloned<T> {
   const maxDepth = Math.min(opts?.depth ?? DEFAULT_DEPTH, MAX_DEPTH);
-  const cache = opts?.preserveRefs === false ? undefined : new WeakMap();
+  const cache: WeakMap<object, unknown> | undefined =
+    opts?.preserveRefs === false ? undefined : new WeakMap();
 
   return cloneIter(value, maxDepth, opts, cache);
 }
