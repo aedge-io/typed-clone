@@ -16,6 +16,7 @@ export const paths = {
   license: root.join("LICENSE.md"),
   npmDir: root.join("npm"),
   readme: root.join("README.md"),
+  skillMd: root.join(".agents/skills/typed-clone/SKILL.md"),
   planDir: root.join(".release"),
   planJson: root.join(".release/plan.json"),
   planChangelog: root.join(".release/changelog.md"),

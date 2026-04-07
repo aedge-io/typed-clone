@@ -36,8 +36,8 @@ import {
 import type {
   Cloneable, // interface: implement [Clone]() to control cloning
   Cloned, // the cloned representation of T
-  CloneKey, // typeof Clone (the unique symbol type)
-  CloneOptions, // extends StructuredSerializeOptions, adds depth
+  CloneOptions, // extends StructuredSerializeOptions, adds depth + preserveRefs
+  InherentlyCloned, // extract return type of [Clone] from a Cloneable
   Ref, // marker: value was returned by reference
   Unref, // strips all Ref markers recursively
 } from "@aedge-io/typed-clone";
@@ -104,8 +104,6 @@ class SpecialDate extends Date implements Cloneable<SpecialDate> {
 
 ## Check for Clone Support at Runtime
 
-If necessary:
-
 ```typescript
 import { Clone, isInherentlyCloneable } from "@aedge-io/typed-clone";
 
@@ -133,26 +131,22 @@ const plain = unref(cloned);
 // plain: { handler: () => number; name: string }
 ```
 
-## Depth Control
+## CloneOptions
 
 ```typescript
-clone(value, { depth: 32 });
+clone(value, {
+  depth: 32, // max recursion depth (default: 16, max: 500)
+  preserveRefs: false, // disable shared/circular ref tracking (default: true)
+  transfer: [buf], // ArrayBuffers to transfer (passed to structuredClone)
+});
 ```
 
-- Default: **16**
-- Maximum: **500** (TypeScript type inference limit; higher values are clamped)
-- When exhausted, remaining nested values are returned by `Ref`
-
-## Transfer Support
-
-Passes through to `structuredClone` for nested ArrayBuffers:
-
-```typescript
-const buf = new ArrayBuffer(8);
-const obj = { nested: { buffer: buf } };
-const cloned = clone(obj, { transfer: [buf] });
-// buf.byteLength === 0 (detached)
-```
+- **depth** — When exhausted, remaining nested values are returned as `Ref<T>`.
+  Max 500 (TypeScript type inference limit; higher values are clamped).
+- **preserveRefs** — When `true` (default), shared sub-objects preserve identity
+  in the output and circular references are handled. Set to `false` for up to
+  ~50% faster clones when you can guarantee no circular/shared references.
+- **transfer** — Passed through to `structuredClone` for nested ArrayBuffers.
 
 ## Shared References
 
@@ -167,25 +161,10 @@ cloned.a === cloned.b; // true — identity preserved
 cloned.a === original.a; // false — independent from source
 ```
 
-## Disabling shared reference tracking
-
-In very performance critical sections and the verified absence of circular
-dependencies, the internal cache can be disabled:
-
-```typescript
-const shared = { x: 1 };
-const original = { a: shared, b: shared };
-const cloned = clone(original, { preserveRefs: false });
-
-cloned.a !== cloned.b; // true — independently cloned
-cloned.a === original.a; // false — independent from source
-```
-
 ## Known Type Holes
 
 These are cases where `Cloned<T>` is not able to infer the return type correctly
-because of the types are indistinguishable structurally. They are documented in
-the test suite.
+because the types are structurally indistinguishable.
 
 ### Container subclasses without custom methods
 
@@ -202,19 +181,11 @@ const c = clone(a);
 // Runtime:     same ref   (actually Ref)
 ```
 
-**Workaround:** implement `[Clone]` if the type should be inherently cloneable,
-or make suitable fields private to trigger the nominal typing machinery and get
-a correct types.
-
 ### Classes with methods behind deep inheritance (>16 levels)
 
 When the prototype chain exceeds the depth limit, `hasCustomMethods` can't reach
 the level that defines methods. Data classes may be returned by reference
 despite the type predicting a clone, and vice versa.
-
-**Workaround:** implement `[Clone]` for the type, suggest to restruture the code
-to flatten the (supposedly) complex inheritence chain or pass `{ depth: N }`
-where N exceeds the inheritance depth.
 
 ### RecordLike classes
 
@@ -234,17 +205,5 @@ const c = clone(new User("Alice"));
 // Runtime:     same ref (Ref)
 ```
 
-**Workaround:** implement `[Clone]` if the type should be inherently cloneable,
-or make suitable fields private to trigger the nominal typing machinery and get
-a correct types.
-
-## Imports
-
-```
-lib/types.ts  — pure type declarations (no runtime JS emitted)
-lib/clone.ts  — all runtime: Clone symbol, clone(), ref(), unref(), isInherentlyCloneable()
-lib/mod.ts    — barrel re-export; entry point of "@aedge-io/typed-clone"
-```
-
-Only use the entry point. Import types with seperate `import type` from
-`@aedge-io/typed-clone` statements.
+**Workaround for all type holes:** implement `[Clone]` on the type, or make
+fields private to trigger nominal typing.
